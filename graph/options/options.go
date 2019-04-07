@@ -3,14 +3,11 @@ package options
 
 import (
 	"fmt"
-	"net/http"
+	"github.com/emicklei/go-restful"
 	"net/url"
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/gorilla/mux"
-	"github.com/prometheus/common/model"
 
 	"github.com/kiali/kiali/business"
 	"github.com/kiali/kiali/graph"
@@ -65,18 +62,32 @@ type Options struct {
 	VendorOptions
 }
 
-func NewOptions(r *http.Request) Options {
+func getParameters(key string, request *restful.Request) string {
+	value, ok := request.PathParameters()[key]
+
+	if !ok {
+		return request.QueryParameter(key)
+	}
+
+	return value
+}
+
+func NewOptions(request *restful.Request) Options {
 	// path variables (0 or more will be set)
-	vars := mux.Vars(r)
-	app := vars["app"]
-	namespace := vars["namespace"]
-	service := vars["service"]
-	version := vars["version"]
-	workload := vars["workload"]
+	app := getParameters("app", request)
+	namespace := getParameters("namespace", request)
+	service := getParameters("service", request)
+	version := getParameters("version", request)
+	workload := getParameters("workload", request)
 
 	// query params
+<<<<<<< HEAD
 	params := r.URL.Query()
 	var duration model.Duration
+=======
+	params := request.Request.URL.Query()
+	var duration time.Duration
+>>>>>>> 6b5b8182... change for kubesphere
 	var includeIstio bool
 	var injectServiceNodes bool
 	var queryTime int64
