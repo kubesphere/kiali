@@ -78,14 +78,14 @@ func (o *K8SClientMock) GetCronJobs(namespace string) ([]batch_v1beta1.CronJob, 
 	return args.Get(0).([]batch_v1beta1.CronJob), args.Error(1)
 }
 
-func (o *K8SClientMock) GetDeployment(namespace string, deploymentName string) (*v1beta1.Deployment, error) {
+func (o *K8SClientMock) GetDeployment(namespace string, deploymentName string) (*appsv1.Deployment, error) {
 	args := o.Called(namespace, deploymentName)
-	return args.Get(0).(*v1beta1.Deployment), args.Error(1)
+	return args.Get(0).(*appsv1.Deployment), args.Error(1)
 }
 
-func (o *K8SClientMock) GetDeployments(namespace string) ([]v1beta1.Deployment, error) {
+func (o *K8SClientMock) GetDeployments(namespace string) ([]appsv1.Deployment, error) {
 	args := o.Called(namespace)
-	return args.Get(0).([]v1beta1.Deployment), args.Error(1)
+	return args.Get(0).([]appsv1.Deployment), args.Error(1)
 }
 
 func (o *K8SClientMock) GetDeploymentConfig(namespace string, deploymentName string) (*osappsv1.DeploymentConfig, error) {
