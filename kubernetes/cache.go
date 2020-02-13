@@ -220,7 +220,7 @@ func (c *controllerImpl) GetCronJobs(namespace string) ([]batch_v1beta1.CronJob,
 	return []batch_v1beta1.CronJob{}, nil
 }
 
-func (c *controllerImpl) GetDeployment(namespace, name string) (*v1beta1.Deployment, error) {
+func (c *controllerImpl) GetDeployment(namespace, name string) (*appsv1.Deployment, error) {
 	if err := c.checkStateAndRetry(); err != nil {
 		return nil, err
 	}
@@ -230,36 +230,36 @@ func (c *controllerImpl) GetDeployment(namespace, name string) (*v1beta1.Deploym
 		return nil, err
 	}
 	if exist {
-		dep, ok := deps.(*v1beta1.Deployment)
+		dep, ok := deps.(*appsv1.Deployment)
 		if !ok {
 			return nil, errors.New("Bad Deployment type found in cache")
 		}
 		return dep, nil
 	}
-	return nil, NewNotFound(name, "apps/v1beta1", "Deployment")
+	return nil, NewNotFound(name, "apps/v1", "Deployment")
 }
 
-func (c *controllerImpl) GetDeployments(namespace string) ([]v1beta1.Deployment, error) {
+func (c *controllerImpl) GetDeployments(namespace string) ([]appsv1.Deployment, error) {
 	if err := c.checkStateAndRetry(); err != nil {
-		return []v1beta1.Deployment{}, err
+		return []appsv1.Deployment{}, err
 	}
 	indexer := c.controllers["Deployment"].GetIndexer()
 	deps, err := indexer.ByIndex("namespace", namespace)
 	if err != nil {
-		return []v1beta1.Deployment{}, err
+		return []appsv1.Deployment{}, err
 	}
 	if len(deps) > 0 {
-		_, ok := deps[0].(*v1beta1.Deployment)
+		_, ok := deps[0].(*appsv1.Deployment)
 		if !ok {
 			return nil, errors.New("Bad Deployment type found in cache")
 		}
-		nsDeps := make([]v1beta1.Deployment, len(deps))
+		nsDeps := make([]appsv1.Deployment, len(deps))
 		for i, dep := range deps {
-			nsDeps[i] = *(dep.(*v1beta1.Deployment))
+			nsDeps[i] = *(dep.(*appsv1.Deployment))
 		}
 		return nsDeps, nil
 	}
-	return []v1beta1.Deployment{}, nil
+	return []appsv1.Deployment{}, nil
 }
 
 func (c *controllerImpl) GetEndpoints(namespace, name string) (*v1.Endpoints, error) {
